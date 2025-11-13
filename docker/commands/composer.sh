@@ -1,2 +1,2 @@
 #!/bin/bash
-docker exec -it php_laravel_example composer "$@"
+docker exec -it php_vending_machine composer "$@"

@@ -1,22 +1,21 @@
 services:
-  php_laravel_example:
+  php_vending_machine:
     build: ./php
     container_name: php_$PROJECT_NAME
     volumes:
       - ../:/code
       - ./php:/usr/local/etc/php
-      - /tmp:/tmp
     ports:
       - "$PHP_PORT:9000"
     expose:
       - "$PHP_PORT"
     networks:
-      laravel_example:
+      vending_machine:
         ipv4_address: 10.7.0.7
     depends_on:
-      - mysql_laravel_example
-      - redis_laravel_example
-  nginx_laravel_example:
+      - mysql_vending_machine
+      - redis_vending_machine
+  nginx_vending_machine:
     image: nginx:latest
     container_name: nginx_$PROJECT_NAME
     ports:
@@ -27,11 +26,11 @@ services:
       - ../:/code
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
-      laravel_example:
+      vending_machine:
         ipv4_address: 10.7.0.5
     depends_on:
-      - php_laravel_example
-  mysql_laravel_example:
+      - php_vending_machine
+  mysql_vending_machine:
       image: mariadb:latest
       container_name: mysql_$PROJECT_NAME
       command: --default-authentication-plugin=mysql_native_password && mysqladmin -u root -p status
@@ -47,9 +46,9 @@ services:
           - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
           - MYSQL_TCP_PORT:${MYSQL_PORT}
       networks:
-          laravel_example:
+          vending_machine:
               ipv4_address: 10.7.0.6
-  redis_laravel_example:
+  redis_vending_machine:
       image: redis:latest
       container_name: redis_$PROJECT_NAME
       ports:
@@ -57,10 +56,10 @@ services:
       expose:
           - "$REDIS_PORT"
       networks:
-          laravel_example:
+          vending_machine:
               ipv4_address: 10.7.0.10
 networks:
-  laravel_example:
+  vending_machine:
     driver: bridge
     ipam:
       config:
